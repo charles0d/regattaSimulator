@@ -42,7 +42,7 @@ class Boat:
         
         if (self.x - cls.objective[0])**2 + (self.y - cls.objective[1])**2 < cls.r**2:
             return True
-        
+    
     def speed(self, tws):
         return [0, 0]
     
