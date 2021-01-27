@@ -7,6 +7,9 @@ Created on Tue Jan 26 15:17:59 2021
 import wind as w
 
 class Boat:
+    objective = [100,100]
+    r = 2
+    
     def __init__(self, x, y, twa):
         self.twa = twa
         self.x = x
@@ -32,10 +35,14 @@ class Boat:
             return [ws/1.414, ws/1.414]
         return [0,0]
     
-    def updatePosition(self, dt, tws):
-        self.x = self.x + self.speed(tws)[0]*dt
-        self.y = self.y + self.speed(tws)[1]*dt
+    def updatePosition(self, cls, dt):
+        self.vx, self.vy = self.computeSpeed()
+        self.x = self.x + self.vx*dt
+        self.y = self.y + self.vy*dt
         
+        if (self.x - cls.objective[0])**2 + (self.y - cls.objective[1])**2 < cls.r**2:
+            return True
+    
     def speed(self, tws):
         return [0, 0]
     
