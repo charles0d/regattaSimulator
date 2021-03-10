@@ -16,3 +16,13 @@ class Wind:
     def trueWind(cls, x, y):
         return [-cls.avgSpeed*np.sin(cls.avgAngle),
                 -cls.avgSpeed*np.cos(cls.avgAngle)]
+
+
+    @classmethod
+    def tws(cls, x, y):
+        (vx, vy) = cls.trueWind(x, y)
+        return np.sqrt(vx**2 + vy**2)
+
+
+if __name__ == "__main__":
+    print("Project was run from wind.py file")
