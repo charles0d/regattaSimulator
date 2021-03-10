@@ -5,6 +5,8 @@ Created on Fri Jan 29 15:40:54 2021
 @author: E030751
 """
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 from scipy.interpolate import griddata
 
 
@@ -27,17 +29,36 @@ def polarFunction(fileName):
     twsIndices = [int(x) for x in cols]
     twaIndices = [30 + 5*x for x in range(len(table[cols[0]]))]
 
-    points = [[0, 0]]
+    # Add two extreme values for twa = 0 and tws = 0
+    points = [[0, 0], [0, 50], [180, 0]]
+
     for a in twaIndices:
         for ws in twsIndices:
             points.append([a, ws])
 
     values = list(table.values.flatten())
+    # Insert two zeros to deal with the two zero twa or tws points
+    values.insert(0, 0)
+    values.insert(0, 0)
     values.insert(0, 0)
 
-    return lambda twa, tws: griddata(points, values, (twa, tws),
-                                     method='linear')
+    def fun(twa, tws): return griddata(points, values, (twa, tws),
+                                       method='linear')
+
+    return fun
+
+
+def plot():
+    twa = np.linspace(0, 180, 100)
+    tws = np.linspace(0, 50, 100)
+    TWA, TWS = np.meshgrid(twa, tws)
+    gridFunction = polarFunction("polar.pol")
+    V = gridFunction(TWA, TWS)
+    plt.contourf(TWA, TWS, V)
+    plt.colorbar()
+    plt.show()
 
 
 if __name__ == "__main__":
-    print("Project was run from polar.py file")
+    print("Project was run from polar.py file. See plot to have an idea")
+    plot()
