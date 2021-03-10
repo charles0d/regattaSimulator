@@ -17,6 +17,7 @@ class Wind:
         return [-cls.avgSpeed*np.sin(cls.avgAngle),
                 -cls.avgSpeed*np.cos(cls.avgAngle)]
 
+
     @classmethod
     def tws(cls, x, y):
         (vx, vy) = cls.trueWind(x, y)
