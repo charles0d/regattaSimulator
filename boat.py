@@ -25,11 +25,6 @@ class Boat:
         self.vx, self.vy = (-self.speed * np.sin(twaRad),
                             self.speed * np.cos(twaRad))
 
-    """
-    perturbation of the boat on wind field at (x1,y1)
-    We suppose here that we have fast boats so that the flow is always laminar
-    """
-
     def impact(self, x1, y1, tws):
         # TODO
         return [0, 0]
