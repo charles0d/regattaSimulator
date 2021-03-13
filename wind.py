@@ -13,14 +13,13 @@ class Wind:
     avgAngle = 0
 
     @classmethod
-    def trueWind(cls, x, y):
+    def true_wind(cls, x, y):
         return [-cls.avgSpeed*np.sin(cls.avgAngle),
                 -cls.avgSpeed*np.cos(cls.avgAngle)]
 
-
     @classmethod
     def tws(cls, x, y):
-        (vx, vy) = cls.trueWind(x, y)
+        (vx, vy) = cls.true_wind(x, y)
         return np.sqrt(vx**2 + vy**2)
 
 

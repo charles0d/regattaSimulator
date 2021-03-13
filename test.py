@@ -2,8 +2,8 @@ import pytest
 import polar as pol
 
 
-def test_polarFunction():
-    vrPolar = pol.polarFunction("polar.pol")
+def test_polar_function():
+    vrPolar = pol.polar_function("polar.pol")
 
     # Test for values given in the polar file
     assert float(vrPolar(30, 2)) == pytest.approx(0.993, abs=0.001)
@@ -14,7 +14,7 @@ def test_polarFunction():
 
     # Test for extreme values
     assert float(vrPolar(0, 13)) == pytest.approx(0)
-    assert float(vrPolar(20, 8)) == pytest.approx(2)
+    assert float(vrPolar(20, 8)) == pytest.approx(1.47, abs=0.01)
 
 
 if __name__ == "__main__":

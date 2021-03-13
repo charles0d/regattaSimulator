@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import griddata
 
 
-def polarFunction(fileName):
+def polar_function(file_name):
     """
     Parameters
     ----------
-    fileName :
+    file_name :
         txt file that has first row the wind velocity for each column
         First row is 30° TWA and next row increment is 5°
         File should cover 30° to 180° inclusively
@@ -24,13 +24,13 @@ def polarFunction(fileName):
     function that interpolates the polar file
 
     """
-    table = pd.read_table(fileName)
+    table = pd.read_table(file_name)
     cols = table.columns
     twsIndices = [int(x) for x in cols]
-    twaIndices = [30 + 5*x for x in range(len(table[cols[0]]))]
+    twaIndices = [30 + 5 * x for x in range(len(table[cols[0]]))]
 
     # Add two extreme values for twa = 0 and tws = 0
-    points = [[0, 0], [0, 50], [180, 0]]
+    points = [[0, 0], [0, 50], [0, 10], [180, 0]]
 
     for a in twaIndices:
         for ws in twsIndices:
@@ -41,9 +41,11 @@ def polarFunction(fileName):
     values.insert(0, 0)
     values.insert(0, 0)
     values.insert(0, 0)
+    values.insert(0, 0)
 
-    def fun(twa, tws): return griddata(points, values, (twa, tws),
-                                       method='linear')
+    def fun(twa, tws):
+        return griddata(points, values, (180-abs(twa-180), tws),
+                        method='linear')
 
     return fun
 
@@ -52,7 +54,7 @@ def plot():
     twa = np.linspace(0, 180, 100)
     tws = np.linspace(0, 50, 100)
     TWA, TWS = np.meshgrid(twa, tws)
-    gridFunction = polarFunction("polar.pol")
+    gridFunction = polar_function("polar.pol")
     V = gridFunction(TWA, TWS)
     plt.contourf(TWA, TWS, V)
     plt.colorbar()
