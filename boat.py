@@ -8,12 +8,12 @@ from wind import Wind
 import numpy as np
 import pygame
 from constants import *
+from buoy import Buoy
 
 
 class Boat(pygame.sprite.Sprite):
     def __init__(self, name, x, y, bearing, polar):
         """
-
         Parameters
         ----------
         name    : name
@@ -38,12 +38,11 @@ class Boat(pygame.sprite.Sprite):
         self.twa = self.compute_twa()
         self.x = x
         self.y = y
-        print(name, self.compute_speed(Wind.tws(x, y)))
         self.speed = self.compute_speed(Wind.tws(x, y))
         twaRad = self.twa*2*np.pi/360
         self.vx, self.vy = (-self.speed * np.sin(twaRad), self.speed * np.cos(twaRad))
 
-    def turn(self, da, right=True):
+    def turn(self, right, da=1):
         # Set a = +/- da (turn left or right)
         a = (2*right-1)*da
         self.bearing += a
@@ -72,16 +71,16 @@ class Boat(pygame.sprite.Sprite):
         Checks if boat is arrived at objective
         Parameters
         ----------
-        objective : (x,y) coordinates of the objective
+        objective : (x,y) coordinates of the objective in the screen
         r         : radius in which boat must be to be arrived
 
         Returns
         -------
         True iff boat is arrived at objective within radius r
         """
-        if (self.x - objective[0])**2 \
-                + (self.y - objective[1])**2 < r**2:
-            return True
+        dx2 = ((WIDTH - self.x) - objective[0])**2
+        dy2 = ((HEIGHT - self.y) - objective[1])**2
+        return dx2 + dy2 < r**2
 
     def _update_position(self, dt=0.1):
         """
