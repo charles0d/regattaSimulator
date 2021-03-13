@@ -6,9 +6,10 @@ Created on Tue Jan 26 15:17:59 2021
 """
 from wind import Wind
 import numpy as np
+import pygame
 
 
-class Boat:
+class Boat(pygame.sprite.Sprite):
     objective = [100, 100]
     r = 2
 
@@ -23,6 +24,13 @@ class Boat:
         bearing : boat's bearing (in degrees from 0 to 359)
         polar   : polar function describing boat's target speed
         """
+        super(Boat, self).__init__()
+        if bearing < 180:
+            self.surf = pygame.image.load('images/bluePort.png')
+        else:
+            self.surf = pygame.image.load('images/blueStarboard.png')
+        self.rect = self.surf.get_rect()
+
         self.name = name
         self.polar = polar
         self.bearing = bearing
@@ -34,10 +42,6 @@ class Boat:
         twaRad = self.twa*2*np.pi/360
         self.vx, self.vy = (-self.speed * np.sin(twaRad), self.speed * np.cos(twaRad))
 
-    def impact(self, x1, y1, tws):
-        # TODO
-        return [0, 0]
-
     def compute_speed(self, tws):
         # TODO : take inertia into account?
         return self.polar(self.compute_twa(), tws)
@@ -46,7 +50,7 @@ class Boat:
         # TODO
         return self.bearing
 
-    def is_arrived(self, objective, r=2):
+    def is_arrived(self, objective, r=5):
         """
         Checks if boat is arrived at objective
         Parameters
@@ -58,8 +62,8 @@ class Boat:
         -------
         True iff boat is arrived at objective within radius r
         """
-
-        if (self.x - objective[0])**2 + (self.y - objective[1])**2 < r**2:
+        if (self.x - objective[0])**2 \
+                + (self.y - objective[1])**2 < r**2:
             return True
 
     def update_position(self, dt=0.1):
