@@ -10,7 +10,7 @@ import polar as pol
 
 def main():
 
-    vrPolar = pol.polarFunction("polar.pol")
+    vrPolar = pol.polar_function("polar.pol")
     dt = 0.1
     b1 = Boat('1', 0, 0, 45, vrPolar)
     b2 = Boat('2', 0, 0, 50, vrPolar)
@@ -19,7 +19,7 @@ def main():
     finish = False
 
     for i in range(10):
-        a = set(map(lambda x: x.updatePosition(Boat, dt), boatsList))
+        a = set(map(lambda x: x.update_position(Boat, dt), boatsList))
         for b in a:
             finish = finish or b
         if finish:

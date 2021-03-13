@@ -16,33 +16,32 @@ class Boat:
         self.name = name
         self.polar = polar
         self.bearing = bearing
-        self.twa = self.computeTwa()
+        self.twa = self.compute_twa()
         self.x = x
         self.y = y
-        print(name, self.computeSpeed(w.Wind.tws(x, y)))
-        self.speed = self.computeSpeed(w.Wind.tws(x, y))
+        print(name, self.compute_speed(w.Wind.tws(x, y)))
+        self.speed = self.compute_speed(w.Wind.tws(x, y))
         twaRad = self.twa*2*np.pi/360
-        self.vx, self.vy = (-self.speed * np.sin(twaRad),
-                            self.speed * np.cos(twaRad))
+        self.vx, self.vy = (-self.speed * np.sin(twaRad), self.speed * np.cos(twaRad))
 
     def impact(self, x1, y1, tws):
         # TODO
         return [0, 0]
 
-    def computeSpeed(self, tws):
+    def compute_speed(self, tws):
         # TODO : take inertia into account
         return self.polar(self.twa, tws)
 
-    def computeTwa(self):
+    def compute_twa(self):
         # TODO
         return self.bearing
 
-    def updatePosition(self, cls, dt):
+    def update_position(self, cls, dt):
         self.x = self.x + self.vx*dt
         self.y = self.y + self.vy*dt
         # self.twa =
         twaRad = self.bearing*2*np.pi/360
-        self.speed = self.computeSpeed(w.Wind.tws(self.x, self.y))
+        self.speed = self.compute_speed(w.Wind.tws(self.x, self.y))
         self.vx, self.vy = (-self.speed * np.sin(twaRad),
                             self.speed * np.cos(twaRad))
 

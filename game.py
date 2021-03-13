@@ -1,19 +1,18 @@
 import pygame
 
 
-def central_rotation(image, angle, x, y):
+def central_rotation(image, angle, xc, yc):
     rotated_image = pygame.transform.rotate(image, angle)
-    new_rect = rotated_image.get_rect(
-        center=image.get_rect(center=(x, y)).center)
+    rot_rect = rotated_image.get_rect(
+        center=image.get_rect(center=(xc, yc)).center)
 
-    return rotated_image, new_rect
+    return rotated_image, rot_rect
 
 
 pygame.init()
 screen = pygame.display.set_mode((1000, 600))
 screen.fill((0, 128, 255))
 done = False
-bool = True
 x, y = 500, 400
 a = 0
 
@@ -39,7 +38,7 @@ while not done:
         else:
             a -= 1
     screen.fill((0, 128, 255))
-    if(a < 0):
+    if a < 0:
         img = portImage
     else:
         img = starboardImage
