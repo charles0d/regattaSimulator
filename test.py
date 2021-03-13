@@ -14,7 +14,7 @@ def test_polar_function():
 
     # Test for extreme values
     assert float(vrPolar(0, 13)) == pytest.approx(0)
-    assert float(vrPolar(20, 8)) == pytest.approx(2)
+    assert float(vrPolar(20, 8)) == pytest.approx(1.47, abs=0.01)
 
 
 if __name__ == "__main__":

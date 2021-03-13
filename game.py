@@ -1,4 +1,9 @@
 import pygame
+from boat import Boat
+from polar import polar_function
+
+HEIGHT = 600
+WIDTH = 1000
 
 
 def central_rotation(image, angle, xc, yc):
@@ -9,12 +14,13 @@ def central_rotation(image, angle, xc, yc):
     return rotated_image, rot_rect
 
 
+vrPolar = polar_function("polar.pol")
 pygame.init()
-screen = pygame.display.set_mode((1000, 600))
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 screen.fill((0, 128, 255))
 done = False
-x, y = 500, 400
-a = 0
+
+b = Boat('1', WIDTH-800, HEIGHT-500, 45, vrPolar)
 
 starboardImage = pygame.image.load('images/blueStarboard.png')
 starboardImage = pygame.transform.rotozoom(starboardImage, -45, 0.3)
@@ -28,23 +34,26 @@ while not done:
             done = True
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_LEFT]:
-        if a == 180:
-            a = -179
+        if b.bearing == 0:
+            b.bearing = 359
         else:
-            a += 1
+            b.bearing -= 1
     if pressed[pygame.K_RIGHT]:
-        if a == -180:
-            a = 179
+        if b.bearing == 359:
+            b.bearing = 0
         else:
-            a -= 1
+            b.bearing += 1
     screen.fill((0, 128, 255))
-    if a < 0:
+    if b.bearing < 180:
         img = portImage
     else:
         img = starboardImage
-    rot_image, new_rect = central_rotation(img, a, x, y)
+
+    rot_image, new_rect = central_rotation(img, -b.bearing, 1000-b.x, 600-b.y)
     screen.blit(rot_image, new_rect.topleft)
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(250)
+    b.update_position()
 
 pygame.quit()
+print("Game terminated")

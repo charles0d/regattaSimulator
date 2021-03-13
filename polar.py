@@ -27,10 +27,10 @@ def polar_function(file_name):
     table = pd.read_table(file_name)
     cols = table.columns
     twsIndices = [int(x) for x in cols]
-    twaIndices = [30 + 5*x for x in range(len(table[cols[0]]))]
+    twaIndices = [30 + 5 * x for x in range(len(table[cols[0]]))]
 
     # Add two extreme values for twa = 0 and tws = 0
-    points = [[0, 0], [0, 50], [180, 0]]
+    points = [[0, 0], [0, 50], [0, 10], [180, 0]]
 
     for a in twaIndices:
         for ws in twsIndices:
@@ -41,9 +41,11 @@ def polar_function(file_name):
     values.insert(0, 0)
     values.insert(0, 0)
     values.insert(0, 0)
+    values.insert(0, 0)
 
-    def fun(twa, tws): return griddata(points, values, (twa, tws),
-                                       method='linear')
+    def fun(twa, tws):
+        return griddata(points, values, (180-abs(twa-180), tws),
+                        method='linear')
 
     return fun
 

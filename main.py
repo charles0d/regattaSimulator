@@ -19,7 +19,7 @@ def main():
     finish = False
 
     for i in range(10):
-        a = set(map(lambda x: x.update_position(Boat, dt), boatsList))
+        a = set(map(lambda x: x.update_position(dt), boatsList))
         for b in a:
             finish = finish or b
         if finish:
