@@ -8,7 +8,6 @@ from wind import Wind
 import numpy as np
 import pygame
 from constants import *
-from buoy import Buoy
 
 
 class Boat(pygame.sprite.Sprite):
@@ -35,12 +34,12 @@ class Boat(pygame.sprite.Sprite):
         self.name = name
         self.polar = polar
         self.bearing = bearing
-        self.twa = self.compute_twa()
         self.x = x
         self.y = y
-        self.speed = self.compute_speed(Wind.tws(x, y))
+
+        speed = self.speed(Wind.tws(x, y))
         twaRad = self.twa*2*np.pi/360
-        self.vx, self.vy = (-self.speed * np.sin(twaRad), self.speed * np.cos(twaRad))
+        self.vx, self.vy = (-speed * np.sin(twaRad), speed * np.cos(twaRad))
 
     def turn(self, right, da=1):
         # Set a = +/- da (turn left or right)
@@ -58,7 +57,7 @@ class Boat(pygame.sprite.Sprite):
         if self.bearing - a < 180 and self.bearing >= 180:
             self.image = self.starboard_img
 
-    def compute_speed(self, tws):
+    def speed(self, tws):
         # TODO : take inertia into account?
         return self.polar(self.compute_twa(), tws)
 
@@ -94,11 +93,11 @@ class Boat(pygame.sprite.Sprite):
         self.x = self.x + self.vx*dt
         self.y = self.y + self.vy*dt
         twaRad = self.bearing*2*np.pi/360
-        self.speed = self.compute_speed(Wind.tws(self.x, self.y))
-        self.vx, self.vy = (-self.speed * np.sin(twaRad),
-                            self.speed * np.cos(twaRad))
+        speed = self.speed(Wind.tws(self.x, self.y))
+        self.vx, self.vy = (-speed * np.sin(twaRad), speed * np.cos(twaRad))
 
     def update(self):
+        self._update_position()
         self._update_position()
         self.surf = pygame.transform.rotate(self.image, -self.bearing)
         self.rect = self.surf.get_rect(center=(WIDTH - self.x, HEIGHT - self.y))
