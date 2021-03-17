@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Jan 26 15:17:59 2021
 
-@author: CD
-"""
 from wind import Wind
 import numpy as np
 import pygame
 from constants import *
-from buoy import Buoy
 
 
 class Boat(pygame.sprite.Sprite):
@@ -35,14 +30,25 @@ class Boat(pygame.sprite.Sprite):
         self.name = name
         self.polar = polar
         self.bearing = bearing
-        self.twa = self.compute_twa()
         self.x = x
         self.y = y
-        self.speed = self.compute_speed(Wind.tws(x, y))
-        twaRad = self.twa*2*np.pi/360
-        self.vx, self.vy = (-self.speed * np.sin(twaRad), self.speed * np.cos(twaRad))
+
+        speed = self.speed(Wind.tws(x, y))
+        twaRad = self.twa()*2*np.pi/360
+        self.vx, self.vy = (-speed * np.sin(twaRad), speed * np.cos(twaRad))
 
     def turn(self, right, da=1):
+        """
+        Make the boat turn for during one step
+        Parameters
+        ----------
+        right : 1 (=RIGHT) or 0 (=LEFT)
+        da    : angle modification during the step
+
+        Returns
+        -------
+        None
+        """
         # Set a = +/- da (turn left or right)
         a = (2*right-1)*da
         self.bearing += a
@@ -58,11 +64,28 @@ class Boat(pygame.sprite.Sprite):
         if self.bearing - a < 180 and self.bearing >= 180:
             self.image = self.starboard_img
 
-    def compute_speed(self, tws):
-        # TODO : take inertia into account?
-        return self.polar(self.compute_twa(), tws)
+    def speed(self, tws):
+        """
+        Computes the scalar speed of the boat
+        Parameters
+        ----------
+        tws  : true wind speed at boat's location
 
-    def compute_twa(self):
+        Returns
+        -------
+        Scalar value for boat's speed
+        """
+        # TODO : take inertia into account?
+        return self.polar(self.twa(), tws)
+
+    def twa(self):
+        """
+        Computes the true wind angle (twa) of the boat
+
+        Returns
+        -------
+        the value of the twa
+        """
         # TODO: change when wind direction differs from plain north
         return self.bearing
 
@@ -84,21 +107,30 @@ class Boat(pygame.sprite.Sprite):
 
     def _update_position(self, dt=0.1):
         """
-        Updates boat's x,y position,
-        and computes new speed based on bearing and wind at (x,y)
+        Updates boat's (x,y) position after one time step
+        and computes new velocity (vx, vy) based on bearing and wind at (x,y)
 
         Parameters
         ----------
         dt : time step
         """
+
+        twaRad = self.bearing*2*np.pi/360
+        speed = self.speed(Wind.tws(self.x, self.y))
+
         self.x = self.x + self.vx*dt
         self.y = self.y + self.vy*dt
-        twaRad = self.bearing*2*np.pi/360
-        self.speed = self.compute_speed(Wind.tws(self.x, self.y))
-        self.vx, self.vy = (-self.speed * np.sin(twaRad),
-                            self.speed * np.cos(twaRad))
+        self.vx, self.vy = (-speed * np.sin(twaRad), speed * np.cos(twaRad))
 
     def update(self):
+        """
+        Orders the update between two time steps
+
+        Returns
+        -------
+        None
+        """
+        self._update_position()
         self._update_position()
         self.surf = pygame.transform.rotate(self.image, -self.bearing)
         self.rect = self.surf.get_rect(center=(WIDTH - self.x, HEIGHT - self.y))
