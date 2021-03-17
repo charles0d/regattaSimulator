@@ -50,11 +50,28 @@ def polar_function(file_name):
     return fun
 
 
-def plot():
+def plot(file_name):
+    """
+    Plots the graph twa / tws of the polar in file
+
+    Parameters
+    ----------
+    file_name :
+        txt file that has first row the wind velocity for each column
+        First row is 30° TWA and next row increment is 5°
+        File should cover 30° to 180° inclusively
+
+
+    Returns
+    -------
+    None
+    """
+    # TODO: plot a polar graph
+
     twa = np.linspace(0, 180, 100)
     tws = np.linspace(0, 50, 100)
     TWA, TWS = np.meshgrid(twa, tws)
-    gridFunction = polar_function("polar.pol")
+    gridFunction = polar_function(file_name)
     V = gridFunction(TWA, TWS)
     plt.contourf(TWA, TWS, V)
     plt.colorbar()
