@@ -19,6 +19,5 @@ def main():
     while True:
         game.play_step()
 
-
 if __name__ == "__main__":
     main()
