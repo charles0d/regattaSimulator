@@ -50,6 +50,10 @@ class Boat(pygame.sprite.Sprite):
         -------
         None
         """
+        # if the boat is already tacking, let it tack
+        if self.tacking:
+            pass
+
         self.tacking = True
         self.tack_init = self.twa()
         if self.tack_init < 180:
@@ -114,7 +118,7 @@ class Boat(pygame.sprite.Sprite):
         # TODO: change when wind direction differs from plain north
         return self.bearing
 
-    def is_arrived(self, objective, r=25):
+    def is_arrived(self, objective, r=40):
         """
         Checks if boat is arrived at objective
 
@@ -160,7 +164,7 @@ class Boat(pygame.sprite.Sprite):
             if self.twa() == 360 - self.tack_init:
                 self.tacking = False
             else:
-                self.turn(self.tack_dir, 1, True)
+                self.turn(self.tack_dir, 2, True)  # Make a fast tack
         self._step_update_position()
         self.surf = pygame.transform.rotate(self.image, -self.bearing)
         self.rect = self.surf.get_rect(center=(WIDTH - self.x, HEIGHT - self.y))
