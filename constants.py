@@ -9,4 +9,4 @@ RIGHT = 1
 
 # time constants
 SPEED = 50
-TIME_LIMIT = 1000
+TIME_LIMIT = 1200

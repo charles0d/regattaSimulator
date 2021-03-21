@@ -43,31 +43,30 @@ class Agent:
 
         states, actions, rewards, next_states, dones = zip(*mini_sample)
         self.trainer.train_step(states, actions, rewards, next_states, dones)
-    pass
 
     def train_short_memory(self, state, action, reward, next_state, done):
         self.trainer.train_step(state, action, reward, next_state, done)
 
     def get_action(self, state):
-        tack, left, right = False, False, False
+        chill, tack, left, right = True, False, False, False
         if random.random() < self.epsilon0 + np.exp(-self.n_games / self.eps_rate):
             # if tacking do not do anything
             if state[2] or random.random() < 3/4:
                 # do nothing
                 pass
             elif random.random() < 1/8:
-                tack = True
+                chill, tack = False, True
             elif random.random() < 1/2:
-                left = True
+                chill, left = False, True
             else:
-                right = True
+                chill, right = False, True
         else:
             # apply model
             state_tensor = torch.tensor(state, dtype=float)
             predict = self.model(state_tensor)
             move = torch.argmax(predict).item()
-            (tack, left, right) = (move == 1, move == 2, move == 3)
-        return Action(tack, left, right)
+            (chill, tack, left, right) = (move == 0, move == 1, move == 2, move == 3)
+        return Action(chill, tack, left, right)
 
 
 def train():
@@ -75,8 +74,9 @@ def train():
 
     boat = Boat('1', WIDTH // 2 + 50, HEIGHT - 400, 45, vr_polar)
     buoy = Buoy(WIDTH // 2 + 50, 100)
-    scores_hist = []
-    mean_scores = []
+    times_hist = []
+    mean_times = []
+    total_time = 0
 
     agent = Agent()
     game = Game(boat, buoy, False)
@@ -99,8 +99,12 @@ def train():
                 agent.record = time
                 # agent.model.save()
 
-            print(f'Game {agent.n_games}, time: {time}, record: {agent.record}')
-            #TODO some plotting ?
+            print(f'Game {agent.n_games} over, time: {time}, record: {agent.record}')
+            times_hist.append(time)
+            total_time += time
+            mean_times.append(total_time/agent.n_games)
+            print(f'Mean time: {mean_times[-1]}')
+            # TODO: add plot
 
 
 if __name__ == '__main__':
