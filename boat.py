@@ -118,7 +118,7 @@ class Boat(pygame.sprite.Sprite):
         # TODO: change when wind direction differs from plain north
         return self.bearing
 
-    def is_arrived(self, objective, r=25):
+    def is_arrived(self, objective, r=40):
         """
         Checks if boat is arrived at objective
 

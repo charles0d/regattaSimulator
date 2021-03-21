@@ -7,5 +7,6 @@ WIDTH = 1000
 LEFT = 0
 RIGHT = 1
 
-# frame rate
+# time constants
 SPEED = 50
+TIME_LIMIT = 1000
