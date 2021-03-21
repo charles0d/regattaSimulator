@@ -10,8 +10,8 @@ from game import Game
 def main():
     vr_polar = polar_function("polar.pol")
 
-    boat = Boat('1', WIDTH - 800, HEIGHT - 500, 45, vr_polar)
-    buoy = Buoy(300, 200)
+    boat = Boat('1', WIDTH // 2 + 50, HEIGHT - 400, 45, vr_polar)
+    buoy = Buoy(WIDTH // 2 + 50, 100)
 
     game = Game(boat, buoy)
     print(f'Starting the game with boat {boat.name}')
