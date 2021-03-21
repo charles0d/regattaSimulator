@@ -23,7 +23,7 @@ class Agent:
         self.epsilon0, self.eps_rate = 0.05, 10 # randomness param
         self.gamma = 0.95    # Discount factor
         self.memory = deque(maxlen=MAX_MEMORY)
-        self.record = 1000
+        self.record = TIME_LIMIT
         self.model = LinearQNet(6, 256, 4)
         self.trainer = QTrainer(self.model, LEARNING_RATE, self.gamma)
 
@@ -72,7 +72,7 @@ class Agent:
 def train():
     vr_polar = polar_function("polar.pol")
 
-    boat = Boat('1', WIDTH // 2 + 50, HEIGHT - 400, 45, vr_polar)
+    boat = Boat('1', WIDTH // 2, HEIGHT - 300, 45, vr_polar)
     buoy = Buoy(WIDTH // 2 + 50, 100)
     times_hist = []
     mean_times = []
@@ -97,7 +97,8 @@ def train():
             agent.train_long_memory()
             if time < agent.record:
                 agent.record = time
-                # agent.model.save()
+                agent.model.save()
+                print('Saving model..')
 
             print(f'Game {agent.n_games} over, time: {time}, record: {agent.record}')
             times_hist.append(time)
