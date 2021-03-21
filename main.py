@@ -16,7 +16,8 @@ def main():
     game = Game(boat, buoy)
     print(f'Starting the game with boat {boat.name}')
 
-    game.run()
+    while True:
+        game.play_step()
 
 
 if __name__ == "__main__":
